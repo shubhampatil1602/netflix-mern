@@ -1,6 +1,27 @@
 import { IoIosArrowDropdown } from 'react-icons/io';
+import { useDispatch, useSelector } from 'react-redux';
+import { API_END_POINT } from '../utils/constant';
+import axios from 'axios';
+import { setUser } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Header = () => {
+  const user = useSelector((store) => store.app.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    try {
+      const res = await axios.get(`${API_END_POINT}/logout`);
+      if (res.data.success) {
+        toast.success('Logged out successfully.');
+      }
+      dispatch(setUser(null));
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className='absolute z-10 w-full p-4 pt-0 flex justify-center bg-gradient-to-b from-black'>
       <div className='w-5/6 p-6 flex justify-between'>
@@ -10,19 +31,26 @@ const Header = () => {
           alt='logo'
         />
 
-        <div className='flex gap-2'>
-          <div className='flex justify-center items-center text-white'>
-            <h1 className='rounded-md p-2 font-medium'>Shubham</h1>
-            <IoIosArrowDropdown size={25} />
-          </div>
+        {user && (
+          <div className='flex gap-2'>
+            <div className='flex justify-center items-center text-white'>
+              <h1 className='rounded-md p-2 font-medium'>
+                {user.user.fullName}
+              </h1>
+              <IoIosArrowDropdown size={25} />
+            </div>
 
-          <button className='bg-red-600 text-white px-4 py-2 rounded-md'>
-            Logout
-          </button>
-          <button className='bg-red-600 text-white px-4 py-2 rounded-md'>
-            Search movie
-          </button>
-        </div>
+            <button
+              onClick={logoutHandler}
+              className='bg-red-600 text-white px-4 py-2 rounded-md'
+            >
+              Logout
+            </button>
+            <button className='bg-red-600 text-white px-4 py-2 rounded-md'>
+              Search movie
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

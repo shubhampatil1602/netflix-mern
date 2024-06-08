@@ -4,6 +4,8 @@ import axios from 'axios';
 import { API_END_POINT } from '../utils/constant';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading, setUser } from '../redux/userSlice';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -12,6 +14,9 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector((store) => store.app.isLoading);
 
   const handleAuth = () => {
     setIsLogin(!isLogin);
@@ -19,7 +24,7 @@ const Login = () => {
 
   const getInputData = async (e) => {
     e.preventDefault();
-
+    dispatch(setLoading(true));
     if (isLogin) {
       try {
         const res = await axios.post(
@@ -38,9 +43,12 @@ const Login = () => {
         if (res.data.success) {
           toast.success(res.data.message);
         }
+        dispatch(setUser(res.data));
         navigate('/browse');
       } catch (error) {
         toast.error(error.response.data.message);
+      } finally {
+        dispatch(setLoading(false));
       }
     } else {
       try {
@@ -65,6 +73,8 @@ const Login = () => {
       } catch (error) {
         console.log(error);
         toast.error(error.response.data.message);
+      } finally {
+        dispatch(setLoading(false));
       }
     }
 
@@ -114,7 +124,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className='p-2 rounded bg-red-600 font-bold text-lg'>
-            {isLogin ? 'Login' : 'Register'}
+            {`${isLoading ? 'Loading...' : isLogin ? 'Login' : 'Register'}`}
           </button>
         </div>
         <p className='font-xs text-gray-300 font-extralight'>
