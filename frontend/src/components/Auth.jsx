@@ -84,19 +84,20 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className=''>
       <Header />
-      <div className='h-full w-full absolute'>
+      <div className='h-full w-full absolute hidden sm:block'>
         <img
           className='object-contain'
           src='https://assets.nflxext.com/ffe/siteui/vlv3/cacfadb7-c017-4318-85e4-7f46da1cae88/e43aa8b1-ea06-46a5-abe3-df13243e718d/IN-en-20240603-popsignuptwoweeks-perspective_alpha_website_large.jpg'
           alt='bg'
         />
       </div>
+      <div className='h-[115.233%] w-full absolute bg-black sm:opacity-40'></div>
 
       <form
         onSubmit={getInputData}
-        className='bg-black opacity-85 text-white absolute z-20 p-16 rounded-lg w-1/3 flex flex-col gap-10 mx-auto left-0 right-0 my-32'
+        className='bg-black opacity-90 text-white absolute z-20 sm:p-16 sm:pt-12 p-10 rounded-lg w-full sm:w-[441px] flex flex-col gap-10 mx-auto left-0 right-0 my-32'
       >
         <h1 className='text-3xl font-bold'>{isLogin ? 'Login' : 'Register'}</h1>
         <div className='flex flex-col gap-4'>
